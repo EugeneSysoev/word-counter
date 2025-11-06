@@ -3,9 +3,13 @@
 
 # Функциональность
 Подсчет общего количества слов в txt-файлах
+
 Игнорирование знаков препинания
+
 Исключение союзов и частицы "не"
+
 Слова с дефисами считаются как одно слово
+
 Вывод топ-5 самых частых слов по флагу -t
 
 # Установка
@@ -13,26 +17,50 @@ bash
 git clone <repository-url>
 cd word-counter
 npm install
-Сборка
-bash
 npm run build
 Использование
+Создание тестового файла
 bash
+echo "Привет мир! Это тестовый документ для проверки работы утилиты." > document.txt
+Запуск утилиты
+bash
+# Через npm скрипты
+npm start -- document.txt
+npm start -- document.txt -t
 
-# Базовое использование
-word-counter document.txt
+# Прямой запуск
+node dist/index.js document.txt
+node dist/index.js document.txt -t
 
-# С выводом топ-5 слов
-word-counter document.txt -t
+# В режиме разработки (с автосборкой)
+npm run dev -- document.txt
+npm run dev -- document.txt -t
+Пример
+Для файла example.txt с содержимым:
 
-# Сборка и запуск
-npm run dev
+text
+Это тестовый файл. Черно-белый кот бежал по улице. Это не просто тест!
+Результат:
+
+text
+Общее количество слов: 8
+
+Топ-5 самых частых слов:
+1. "тестовый" - 1 раз
+2. "файл" - 1 раз
+3. "черно-белый" - 1 раз
+4. "кот" - 1 раз
+5. "бежал" - 1 раз
+Разработка
+bash
+# Сборка проекта
+npm run build
+
+# Запуск в режиме разработки
+npm run dev -- document.txt
 
 # Проверка кода
 npm run lint
 
 # Автоисправление ошибок
 npm run lint:fix
-
-# Сборка проекта
-npm run build
