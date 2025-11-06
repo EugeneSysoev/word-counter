@@ -53,7 +53,7 @@ function main(): void {
     if (options.showTopWords && result.topWords) {
       console.log('\nТоп-5 самых частых слов:');
       result.topWords.forEach((item: { word: string; count: number }, index: number) => {
-        console.log(`${index + 1}. "${item.word}" - ${item.count} раз`);
+        console.log(`${index + 1}. "${item.word}" - ${item.count} повтор.`);
       });
     }
   } catch (error) {
