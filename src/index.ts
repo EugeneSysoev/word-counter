@@ -62,5 +62,4 @@ function main(): void {
   }
 }
 
-// Для CommonJS просто запускаем main
 main();

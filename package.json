@@ -23,7 +23,7 @@
     "nlp",
     "text-processing"
   ],
-  "author": "Твое Имя <email@example.com> (https://github.com/username)",
+  "author": "Eugene Sysoev <eugenesysoev22@gmail.com> (https://github.com/EugeneSysoev)",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.10.0",
