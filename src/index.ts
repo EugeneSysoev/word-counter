@@ -25,14 +25,14 @@ function parseArguments(): CommandLineOptions {
 
 function displayHelp(): void {
   console.log(`
-Использование: word-counter <путь_к_файлу> [опции]
+Использование: npm start -- <путь_к_файлу> [опции]
 
 Опции:
   -t, --top     Показать топ-5 самых частых слов
 
 Примеры:
-  word-counter document.txt
-  word-counter document.txt -t
+npm start -- test.txt
+npm start -- test.txt -t
   `);
 }
 
