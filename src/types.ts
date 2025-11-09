@@ -1,9 +1,14 @@
+export type TopWordRecord = {
+  word: string;
+  count: number;
+}
+
 export interface WordCountResult {
   totalWords: number;
-  topWords?: Array<{
-    word: string;
-    count: number;
-  }>;
+}
+
+export interface TopWordsResult {
+  topWords: TopWordRecord[];
 }
 
 export interface CommandLineOptions {

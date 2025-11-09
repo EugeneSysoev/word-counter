@@ -1,14 +1,16 @@
 import { readFileSync } from 'fs';
-import { WordCountResult } from './types';
+import { WordCountResult, TopWordsResult } from './types';
 
-export class WordCounter {
+export class WordCounter {  // ✅ Добавляем export
   private static readonly EXCLUDED_WORDS = new Set([
     'не', 'ни', 'но', 'а', 'и', 'или', 'да', 'же', 'ли', 'бы', 'б', 'как',
     'что', 'чтобы', 'чтоб', 'по', 'на', 'за', 'из', 'от', 'до', 'для',
     'при', 'после', 'в', 'с', 'у', 'о', 'об', 'обо', 'ко', 'к', 'со', 'во'
   ]);
 
-  public static countWords(filePath: string, showTopWords: boolean = false): WordCountResult {
+  private static wordFrequency: Map<string, number> = new Map();
+
+  public static countWords(filePath: string): WordCountResult {
     if (!filePath.toLowerCase().endsWith('.txt')) {
       throw new Error('Поддерживаются только txt-файлы');
     }
@@ -21,24 +23,31 @@ export class WordCounter {
     }
 
     const words = this.processText(content);
-    const wordFrequency = new Map<string, number>();
-
-    let totalWords = 0;
-
-    for (const word of words) {
+    
+    this.wordFrequency.clear();
+    
+    const totalWords = words.reduce((count, word) => {
       if (word && !this.EXCLUDED_WORDS.has(word.toLowerCase())) {
-        totalWords++;
-        wordFrequency.set(word, (wordFrequency.get(word) || 0) + 1);
+        count++;
+        this.wordFrequency.set(word, (this.wordFrequency.get(word) || 0) + 1);
       }
+      return count;
+    }, 0);
+
+    return { totalWords };
+  }
+
+  public static getTopWords(limit: number = 5): TopWordsResult {
+    if (this.wordFrequency.size === 0) {
+      throw new Error('Сначала необходимо выполнить countWords()');
     }
 
-    const result: WordCountResult = { totalWords };
+    const topWords = Array.from(this.wordFrequency.entries())
+      .sort(([, countA], [, countB]) => countB - countA)
+      .slice(0, limit)
+      .map(([word, count]) => ({ word, count }));
 
-    if (showTopWords) {
-      result.topWords = this.getTopWords(wordFrequency, 5);
-    }
-
-    return result;
+    return { topWords };
   }
 
   private static processText(text: string): string[] {
@@ -50,15 +59,5 @@ export class WordCounter {
       });
     
     return words;
-  }
-
-  private static getTopWords(
-    wordFrequency: Map<string, number>, 
-    limit: number
-  ): Array<{ word: string; count: number }> {
-    return Array.from(wordFrequency.entries())
-      .sort(([, countA], [, countB]) => countB - countA)
-      .slice(0, limit)
-      .map(([word, count]) => ({ word, count }));
   }
 }

@@ -20,39 +20,54 @@ function parseArguments(): CommandLineOptions {
     }
   }
 
-  return options;
-}
-
-function displayHelp(): void {
-  console.log(`
-Использование: npm start -- <путь_к_файлу> [опции]
-
-Опции:
-  -t, --top     Показать топ-5 самых частых слов
-
-Примеры:
-npm start -- test.txt
-npm start -- test.txt -t
-  `);
-}
-
-function main(): void {
-  const options = parseArguments();
-
   if (!options.filePath) {
     console.error('Ошибка: Не указан путь к файлу');
     displayHelp();
     process.exit(1);
   }
 
+  return options;
+}
+
+function displayHelp(): void {
+  console.log(`
+Word Counter - утилита для подсчета слов в текстовых файлах
+
+Использование:
+  npm start -- <путь_к_файлу> [опции]
+  node dist/index.js <путь_к_файлу> [опции]
+
+Опции:
+  -t, --top     Показать топ-5 самых частых слов
+
+Примеры:
+  npm start -- document.txt          # Базовый подсчет слов
+  npm start -- document.txt -t       # Подсчет с выводом топа слов
+  node dist/index.js text.txt        # Прямой запуск
+  node dist/index.js text.txt --top  # Прямой запуск с топом слов
+
+Создание тестового файла:
+  echo "Ваш текст здесь" > document.txt
+  `);
+}
+
+function main(): void {
+  const options = parseArguments();
+
   try {
-    const result = WordCounter.countWords(options.filePath, options.showTopWords);
-    
+    // Основной подсчет слов
+    const result = WordCounter.countWords(options.filePath);
     console.log(`Общее количество слов: ${result.totalWords}`);
     
-    if (options.showTopWords && result.topWords) {
+    // Отдельный вызов для топа слов (только если нужен)
+    if (options.showTopWords) {
+      const topWordsResult = WordCounter.getTopWords({
+        filePath: options.filePath,
+        limit: 5
+      });
+      
       console.log('\nТоп-5 самых частых слов:');
-      result.topWords.forEach((item: { word: string; count: number }, index: number) => {
+      topWordsResult.topWords.forEach((item, index) => {
         console.log(`${index + 1}. "${item.word}" - ${item.count} повтор.`);
       });
     }
